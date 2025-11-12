@@ -53,4 +53,74 @@ install_local_package("package_folder_name")
 
 """
 
+#from .main import evaluate
+
+"""
+Custom environment setup for EvalAI evaluation worker.
+This script installs the packages required for our CNN evaluation
+(e.g. numpy, pillow, tqdm), then imports and exposes `evaluate()` from main.py.
+"""
+
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+def install(package: str):
+    """Install a pip python package"""
+    try:
+        subprocess.run(
+            [sys.executable, "-m", "pip", "install", package, "--quiet"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        print(f"✅ Installed {package}")
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Error installing {package}: {e.stderr}")
+    except FileNotFoundError:
+        print("❌ Error: pip not found.")
+    except PermissionError:
+        print("❌ Error: Permission denied.")
+
+def install_local_package(folder_name: str):
+    """Install a local python package located under evaluation_script/"""
+    try:
+        subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                os.path.join(str(Path(__file__).parent.absolute()), folder_name)
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        print(f"✅ Installed local package from {folder_name}.")
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Error installing local package from {folder_name}: {e.stderr}")
+    except FileNotFoundError:
+        print("❌ Error: pip not found.")
+    except PermissionError:
+        print("❌ Error: Permission denied.")
+
+# -------------------------------
+# Install required Python packages
+# -------------------------------
+install("numpy==1.26.4")
+install("Pillow==10.2.0")
+install("tqdm==4.66.5")
+
+# optional utilities (if needed for file I/O)
+install("requests==2.32.3")
+
+# Example: install a local helper lib if you bundled one
+# install_local_package("my_custom_lib")
+
+# -------------------------------
+# Import evaluate() for EvalAI
+# -------------------------------
 from .main import evaluate
+
