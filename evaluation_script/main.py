@@ -57,28 +57,53 @@ def _guess_checkpoint_path(subm_dir: str) -> Optional[str]:
     """
     Try to locate a checkpoint file (.npz, .pt, .pth) under the submission folder.
 
-    Priority:
-        1. Any file inside 'checkpoints/' ending with .npz/.pt/.pth
-        2. Any file at submission root with those extensions
+    Updated logic:
+        - In checkpoints/: 
+            * if multiple .npz files exist, choose the most recently modified one.
+            * otherwise still accept .pt / .pth in that directory if present.
+        - Only fallback to submission root if nothing found in checkpoints/.
+
     Returns:
-        Path to the first match found, or None if no checkpoint found.
+        Path to selected checkpoint file, or None if nothing found.
     """
-    # look in checkpoints/ subfolder
-    ckpt_dir = os.path.join(subm_dir, "checkpoints")
     patterns = [".npz", ".pt", ".pth"]
+    ckpt_dir = os.path.join(subm_dir, "checkpoints")
 
+    # ------------------------
+    # 1) First: search in checkpoints/
+    # ------------------------
     if os.path.isdir(ckpt_dir):
-        for fname in os.listdir(ckpt_dir):
-            if any(fname.endswith(ext) for ext in patterns):
-                return os.path.join(ckpt_dir, fname)
+        npz_files = []
+        other_ckpts = []
 
-    # look at submission root
+        for fname in os.listdir(ckpt_dir):
+            full = os.path.join(ckpt_dir, fname)
+            if not os.path.isfile(full):
+                continue
+
+            if fname.endswith(".npz"):
+                npz_files.append(full)
+            elif any(fname.endswith(ext) for ext in [".pt", ".pth"]):
+                other_ckpts.append(full)
+
+        # a) Prefer .npz files, pick newest by mtime
+        if npz_files:
+            npz_files.sort(key=lambda p: os.path.getmtime(p), reverse=True)
+            return npz_files[0]
+
+        # b) Otherwise accept .pt/.pth (first match)
+        if other_ckpts:
+            return other_ckpts[0]
+
+    # ------------------------
+    # 2) Fallback: search in submission root
+    # ------------------------
     for fname in os.listdir(subm_dir):
         if any(fname.endswith(ext) for ext in patterns):
             return os.path.join(subm_dir, fname)
 
-    # none found
     return None
+
 
 
 

@@ -77,11 +77,11 @@ def install(package: str):
         )
         print(f"✅ Installed {package}")
     except subprocess.CalledProcessError as e:
-        print(f"❌ Error installing {package}: {e.stderr}")
+        print(f" Error installing {package}: {e.stderr}")
     except FileNotFoundError:
-        print("❌ Error: pip not found.")
+        print(" Error: pip not found.")
     except PermissionError:
-        print("❌ Error: Permission denied.")
+        print(" Error: Permission denied.")
 
 def install_local_package(folder_name: str):
     """Install a local python package located under evaluation_script/"""
@@ -98,23 +98,23 @@ def install_local_package(folder_name: str):
             capture_output=True,
             text=True,
         )
-        print(f"✅ Installed local package from {folder_name}.")
+        print(f" Installed local package from {folder_name}.")
     except subprocess.CalledProcessError as e:
-        print(f"❌ Error installing local package from {folder_name}: {e.stderr}")
+        print(f" Error installing local package from {folder_name}: {e.stderr}")
     except FileNotFoundError:
-        print("❌ Error: pip not found.")
+        print(" Error: pip not found.")
     except PermissionError:
-        print("❌ Error: Permission denied.")
+        print(" Error: Permission denied.")
 
 # -------------------------------
 # Install required Python packages
 # -------------------------------
-install("numpy==1.26.4")
-install("Pillow==10.2.0")
-install("tqdm==4.66.5")
+install("numpy")
+install("Pillow")
+install("tqdm")
 
 # optional utilities (if needed for file I/O)
-install("requests==2.32.3")
+install("requests")
 
 # Example: install a local helper lib if you bundled one
 # install_local_package("my_custom_lib")
