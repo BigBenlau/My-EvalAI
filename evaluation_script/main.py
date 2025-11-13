@@ -58,7 +58,7 @@ def _guess_checkpoint_path(subm_dir: str) -> Optional[str]:
     Try to locate a checkpoint file (.npz, .pt, .pth) under the submission folder.
 
     Updated logic:
-        - In checkpoints/: 
+        - In checkpoints/:
             * if multiple .npz files exist, choose the most recently modified one.
             * otherwise still accept .pt / .pth in that directory if present.
         - Only fallback to submission root if nothing found in checkpoints/.
@@ -112,7 +112,7 @@ def _find_dataset_root(eval_script_dir: str) -> str:
     Resolve dataset root. By default we expect a folder named 'dataset'
     next to the evaluation_script directory. Allow override via env.
     """
-    default_ds = os.path.abspath(os.path.join(eval_script_dir, "..", "dataset"))
+    default_ds = os.path.abspath(os.path.join(eval_script_dir, "dataset"))
     return os.environ.get("EVAL_DATA_ROOT", default_ds)
 
 
