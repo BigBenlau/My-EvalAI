@@ -1,5 +1,5 @@
 import os, json
-from evaluation_script.main import evaluate  # 如果文件叫 evaluation.py，就改成 from evaluation_script.evaluation import evaluate
+from evaluation_script.main import evaluate  
 
 def test_local_evaluation(
     submission_zip="submission.zip",
