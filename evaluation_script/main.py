@@ -140,7 +140,7 @@ def _find_dataset_root(eval_script_dir: str) -> str:
     Resolve dataset root. By default we expect a folder named 'dataset'
     next to the evaluation_script directory. Allow override via env.
     """
-    default_ds = os.path.abspath(os.path.join(eval_script_dir, "..", "dataset"))
+    default_ds = os.path.abspath(os.path.join(eval_script_dir, "dataset"))
     return os.environ.get("EVAL_DATA_ROOT", default_ds)
 
 
