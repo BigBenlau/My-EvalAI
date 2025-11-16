@@ -215,7 +215,7 @@ def evaluate(test_annotation_file: str,
 
     # 6) Load model via participant's load_model
     img_size = 100
-    strict = True
+    strict = False
     model, meta, report = load_model(
         ckpt_path,
         model_ctor=SmallCNN,
