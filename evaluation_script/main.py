@@ -72,7 +72,7 @@ def _guess_checkpoint_path(subm_dir: str) -> Optional[str]:
     return None
 
 def _import_subm_module(subm_dir: str,
-                        module_name_candidates=("run_test_submit", "submission", "model")):
+                        module_name_candidates=("submission", "run_test_submit", "model")):
     """
     Try to import the participant's module from which we will fetch:
       - SmallCNN
@@ -83,14 +83,8 @@ def _import_subm_module(subm_dir: str,
     sys.path.insert(0, subm_dir)
 
     for mod_name in module_name_candidates:
-        # 1) 普通 import
-        try:
-            mod = importlib.import_module(mod_name)
-            return mod
-        except Exception:
-            pass
-
-        # 2) 文件路径导入
+        # 文件路径导入
+        print(f"Trying to import {mod_name} from {subm_dir}")
         py_path = os.path.join(subm_dir, f"{mod_name}.py")
         if os.path.isfile(py_path):
             spec = importlib.util.spec_from_file_location(mod_name, py_path)
